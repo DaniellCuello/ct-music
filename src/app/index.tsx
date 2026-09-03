@@ -1,98 +1,85 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useMemo, useState } from 'react';
+import { ScrollView, View } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { BottomNavigation } from '@/components/BottomNavigation';
+import { FeaturedCard } from '@/components/FeaturedCard';
+import { Header } from '@/components/Header';
+import { NewReleaseBanner } from '@/components/NewReleaseBanner';
+import { NowPlayingBar } from '@/components/NowPlayingBar';
+import { SearchBar } from '@/components/SearchBar';
+import { SectionTitle } from '@/components/SectionTitle';
+import { SongItem } from '@/components/SongItem';
+import { TrendingCarousel } from '@/components/TrendingCarousel';
+import { featuredItems, recentSongs, trendingItems } from '@/constants/songs';
 
 export default function HomeScreen() {
+  const [query, setQuery] = useState('');
+
+  const filteredSongs = useMemo(() => {
+    if (!query.trim()) {
+      return recentSongs;
+    }
+
+    const normalizedQuery = query.toLowerCase();
+
+    return recentSongs.filter(
+      (song) =>
+        song.title.toLowerCase().includes(normalizedQuery) ||
+        song.artist.toLowerCase().includes(normalizedQuery),
+    );
+  }, [query]);
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+    <View className="flex-1 bg-[#0D0D0D]">
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 180 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="px-5 pt-14">
+          <Header />
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+          <SearchBar value={query} onChangeText={setQuery} />
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+          <NewReleaseBanner />
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+          <TrendingCarousel items={trendingItems} />
+
+          <SectionTitle title="Escucha algo nuevo" />
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="-mx-5 px-5"
+            contentContainerStyle={{ paddingRight: 20 }}
+          >
+            {featuredItems.map((item) => (
+              <FeaturedCard
+                key={item.id}
+                title={item.title}
+                subtitle={item.subtitle}
+                image={item.image}
+              />
+            ))}
+          </ScrollView>
+
+          <SectionTitle title="Escuchado recientemente" />
+
+          <View className="gap-2">
+            {filteredSongs.map((song) => (
+              <SongItem
+                key={song.id}
+                title={song.title}
+                artist={song.artist}
+                image={song.image}
+              />
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+
+      <NowPlayingBar />
+      <BottomNavigation activeTab="home" />
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
