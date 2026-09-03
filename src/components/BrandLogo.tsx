@@ -7,11 +7,12 @@ export function BrandLogo() {
     <View className="flex-row items-end">
       <Image
         source={logoImage}
-        className="mr-2 !h-7 !w-7 rounded-xl"
+        className="mr-2 rounded-xl"
         resizeMode="cover"
+        style={{ width: 75, height: 75 }}
       />
 
-      <Text className="text-[28px] font-black tracking-tight text-white">ꛕͲ 𝖬𝗎𝗌𝗂𝖼</Text>
+      <Text className="text-[56px] font-black tracking-tight text-white">ꛕͲ 𝖬𝗎𝗌𝗂𝖼</Text>
     </View>
   );
 }
