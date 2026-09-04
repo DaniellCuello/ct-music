@@ -8,8 +8,8 @@ Aplicación móvil de música inspirada en las plataformas de streaming, enfocad
 - Franja de **Nuevo lanzamiento** para *Natanael Cano, Vol.1*.
 - Carrusel horizontal de **Tendencias musicales** con cambio automático.
 - Sección **Escucha algo nuevo** con varias recomendaciones.
-- Biblioteca con canciones de Natanael Cano y artistas relacionados.
-- Reproductor con portada, progreso animado, pausa, reanudación, anterior, siguiente y salto de posición.
+- Biblioteca con 12 canciones de Natanael Cano, Junior H, Peso Pluma, Eslabón Armado, Fuerza Regida y más.
+- Reproductor con audio real, portada, progreso, pausa, reanudación, anterior, siguiente, salto de posición y avance automático.
 - Selector de perfiles con Daniell Cuello y LuisFer Cuello.
 - Perfil completo con foto circular, usuario, seguidores, seguidos y playlists.
 
@@ -62,3 +62,4 @@ Comandos útiles durante el desarrollo:
 - React Native
 - TypeScript
 - NativeWind
+- expo-audio
