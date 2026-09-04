@@ -119,6 +119,7 @@ export const recentSongs: Song[] = [
     artist: 'Natanael Cano & Oscar Maydon',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/05/24/4c/05244c75-15f5-3a22-5c3b-835fb254ad04/190296646058.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/1 - Natanael Cano  - Madonna.mp3'),
   },
   {
     id: '2',
@@ -126,6 +127,7 @@ export const recentSongs: Song[] = [
     artist: 'Natanael Cano',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/05/24/4c/05244c75-15f5-3a22-5c3b-835fb254ad04/190296646058.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/2 - Diamantes - Natanael Cano.mp3'),
   },
   {
     id: '3',
@@ -133,6 +135,7 @@ export const recentSongs: Song[] = [
     artist: 'Natanael Cano',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f9/75/58/f97558cf-9cce-0923-42df-196cc93c901a/050742369545_cover.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/3 - Junior H - Ella.mp3'),
   },
   {
     id: '4',
@@ -140,6 +143,7 @@ export const recentSongs: Song[] = [
     artist: 'Natanael Cano & Junior H',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/05/24/4c/05244c75-15f5-3a22-5c3b-835fb254ad04/190296646058.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/4 - El F - Natanael Cano, Junior H.mp3'),
   },
   {
     id: '5',
@@ -147,6 +151,7 @@ export const recentSongs: Song[] = [
     artist: 'Eslabón Armado & Peso Pluma',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/b1/9b/95/b19b9506-5696-ad86-1c85-d198503adfbf/816144021906_Cover.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/5 - Ella Baila Sola  - Eslabon Armado y Peso Pluma.mp3'),
   },
   {
     id: '6',
@@ -154,6 +159,7 @@ export const recentSongs: Song[] = [
     artist: 'Junior H',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/83/86/2a/83862a9a-aac3-8337-2135-6796108202f1/190296802195.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/6 - Junior H - Y LLORO.mp3'),
   },
   {
     id: '7',
@@ -161,6 +167,7 @@ export const recentSongs: Song[] = [
     artist: 'Fuerza Regida y Grupo Frontera',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/27/4a/eb/274aeb8c-3981-690b-1cbd-f00569d45bb3/196589769763.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/7 - Fuerza Regida, Grupo Frontera - Bebe Dame.mp3'),
   },
   {
     id: '8',
@@ -168,5 +175,38 @@ export const recentSongs: Song[] = [
     artist: 'Natanael Cano',
     image:
       'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/7f/88/34/7f8834f4-76eb-1d84-8fb1-deb946cdbb2d/5054197877322.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/8 - Natanael Cano - O Me Voy O Te Vas.mp3'),
+  },
+  {
+    id: '9',
+    title: 'Mar Azul',
+    artist: 'Natanael Cano',
+    image:
+      'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b9/4f/81/b94f81a4-00f3-4cc1-3257-0fdc763cdb9e/196874661499.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/9 - Mar Azul - Natanael Cano.mp3'),
+  },
+  {
+    id: '10',
+    title: 'Por Amarte Así',
+    artist: 'Natanael Cano',
+    image:
+      'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b9/4f/81/b94f81a4-00f3-4cc1-3257-0fdc763cdb9e/196874661499.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/10 - Natanael Cano - Por Amarte Asi.mp3'),
+  },
+  {
+    id: '11',
+    title: 'La Cherokee',
+    artist: 'Natanael Cano & Gabito Ballesteros',
+    image:
+      'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/61/97/20/619720bc-8c5c-6d67-076b-8fdc737adb41/196874661857.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/11 - Natanael Cano, Gabito Ballesteros - La Cherokee.mp3'),
+  },
+  {
+    id: '12',
+    title: 'CR7',
+    artist: 'Natanael Cano',
+    image:
+      'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b9/4f/81/b94f81a4-00f3-4cc1-3257-0fdc763cdb9e/196874661499.jpg/300x300bb.jpg',
+    audio: require('../../assets/Music/12 - Natanael Cano - CR7.mp3'),
   },
 ];

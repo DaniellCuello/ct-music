@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+
+import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
 
 import { recentSongs } from '@/constants/songs';
 import type { Song } from '@/types/music';
@@ -18,73 +20,107 @@ interface PlayerContextValue {
 const PlayerContext = createContext<PlayerContextValue | undefined>(undefined);
 
 export function PlayerProvider({ children }: { children: ReactNode }) {
+  const player = useAudioPlayer(null);
+  const status = useAudioPlayerStatus(player);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const hasEndedRef = useRef(false);
+  const isSwitchingRef = useRef(false);
 
   useEffect(() => {
-    if (!isPlaying || !currentSong) {
+    setAudioModeAsync({ playsInSilentMode: true });
+  }, []);
+
+  const progress = status.duration > 0 ? status.currentTime / status.duration : 0;
+
+  const safePlay = useCallback(() => {
+    try {
+      player.play();
+    } catch {
+      // AbortError en web es cosmético, se ignora
+    }
+  }, [player]);
+
+  const playSong = useCallback(
+    (song: Song) => {
+      const fullSong = recentSongs.find(
+        (s) => s.id === song.id || s.title === song.title,
+      );
+      const target = fullSong ?? song;
+      if (!target.audio) return;
+      isSwitchingRef.current = true;
+      hasEndedRef.current = false;
+      setCurrentSong(target);
+      if (status.playing) {
+        player.pause();
+      }
+      player.replace(target.audio);
+      setTimeout(() => {
+        safePlay();
+        isSwitchingRef.current = false;
+      }, 150);
+    },
+    [player, status.playing, safePlay],
+  );
+
+  const togglePlayback = useCallback(() => {
+    if (status.playing) {
+      player.pause();
+    } else {
+      safePlay();
+    }
+  }, [player, status.playing, safePlay]);
+
+  const seek = useCallback(
+    (value: number) => {
+      player.seekTo(value * status.duration);
+    },
+    [player, status.duration],
+  );
+
+  const skip = useCallback(
+    (seconds: number) => {
+      player.seekTo(status.currentTime + seconds);
+    },
+    [player, status.currentTime],
+  );
+
+  const changeSong = useCallback(
+    (direction: 1 | -1) => {
+      const currentIndex = recentSongs.findIndex(
+        (s) => s.id === currentSong?.id || s.title === currentSong?.title,
+      );
+      const nextIndex =
+        (currentIndex + direction + recentSongs.length) % recentSongs.length;
+      playSong(recentSongs[nextIndex]);
+    },
+    [currentSong, playSong],
+  );
+
+  const nextSong = useCallback(() => changeSong(1), [changeSong]);
+  const previousSong = useCallback(() => changeSong(-1), [changeSong]);
+
+  useEffect(() => {
+    if (status.playing) {
+      hasEndedRef.current = false;
       return;
     }
 
-    const timer = setInterval(() => {
-      setProgress((value) => {
-        if (value >= 1) {
-          setIsPlaying(false);
-          return 1;
-        }
-
-        return Math.min(value + 0.01, 1);
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [currentSong, isPlaying]);
-
-  const playSong = (song: Song) => {
-    setCurrentSong(song);
-    setProgress(0);
-    setIsPlaying(true);
-  };
-
-  const togglePlayback = () => {
-    if (currentSong) {
-      setIsPlaying((value) => !value);
+    if (
+      !isSwitchingRef.current &&
+      status.duration > 0 &&
+      status.currentTime >= status.duration - 1 &&
+      !hasEndedRef.current
+    ) {
+      hasEndedRef.current = true;
+      changeSong(1);
     }
-  };
-
-  const seek = (value: number) => {
-    setProgress(Math.max(0, Math.min(value, 1)));
-  };
-
-  const skip = (seconds: number) => {
-    seek(progress + seconds / 100);
-  };
-
-  const changeSong = (direction: 1 | -1) => {
-    if (!currentSong) {
-      return;
-    }
-
-    const currentIndex = recentSongs.findIndex(
-      (song) => song.id === currentSong.id || song.title === currentSong.title,
-    );
-    const nextIndex =
-      (currentIndex + direction + recentSongs.length) % recentSongs.length;
-
-    setCurrentSong(recentSongs[nextIndex]);
-    setProgress(0);
-    setIsPlaying(true);
-  };
-
-  const nextSong = () => changeSong(1);
-  const previousSong = () => changeSong(-1);
+  }, [status.playing, status.currentTime, status.duration, changeSong]);
 
   return (
     <PlayerContext.Provider
       value={{
         currentSong,
-        isPlaying,
+        isPlaying: status.playing,
         progress,
         playSong,
         togglePlayback,
