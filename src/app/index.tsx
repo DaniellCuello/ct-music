@@ -1,82 +1,57 @@
-import { useMemo, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { FlatList, Pressable, Text, View } from 'react-native';
 
 import { BottomNavigation } from '@/components/BottomNavigation';
-import { FeaturedCard } from '@/components/FeaturedCard';
 import { Header } from '@/components/Header';
 import { NewReleaseBanner } from '@/components/NewReleaseBanner';
 import { NowPlayingBar } from '@/components/NowPlayingBar';
 import { SearchBar } from '@/components/SearchBar';
-import { SectionTitle } from '@/components/SectionTitle';
-import { SongItem } from '@/components/SongItem';
+import { SectionCard } from '@/components/SectionCard';
 import { TrendingCarousel } from '@/components/TrendingCarousel';
-import { featuredItems, recentSongs, trendingItems } from '@/constants/songs';
+import { homeSections, trendingItems } from '@/constants/songs';
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <View className="mb-3 mt-6 flex-row items-center justify-between px-5">
+      <Text className="text-lg font-bold text-white">{title}</Text>
+      <Pressable>
+        <Text className="text-sm font-semibold text-[#B3B3B3]">Mostrar todo</Text>
+      </Pressable>
+    </View>
+  );
+}
 
 export default function HomeScreen() {
-  const [query, setQuery] = useState('');
-
-  const filteredSongs = useMemo(() => {
-    if (!query.trim()) {
-      return recentSongs;
-    }
-
-    const normalizedQuery = query.toLowerCase();
-
-    return recentSongs.filter(
-      (song) =>
-        song.title.toLowerCase().includes(normalizedQuery) ||
-        song.artist.toLowerCase().includes(normalizedQuery),
-    );
-  }, [query]);
-
   return (
-    <View className="flex-1 bg-[#0D0D0D]">
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ paddingBottom: 180 }}
+    <View className="flex-1 bg-[#121212]">
+      <FlatList
+        data={homeSections}
+        keyExtractor={(section) => section.title}
         showsVerticalScrollIndicator={false}
-      >
-        <View className="px-5 pt-14">
-          <Header />
-
-          <SearchBar value={query} onChangeText={setQuery} />
-
-          <NewReleaseBanner />
-
-          <TrendingCarousel items={trendingItems} />
-
-          <SectionTitle title="Escucha algo nuevo" />
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="-mx-5 px-5"
-            contentContainerStyle={{ paddingRight: 20 }}
-          >
-            {featuredItems.map((item) => (
-              <FeaturedCard
-                key={item.id}
-                title={item.title}
-                subtitle={item.subtitle}
-                image={item.image}
-              />
-            ))}
-          </ScrollView>
-
-          <SectionTitle title="Escuchado recientemente" />
-
-          <View className="gap-2">
-            {filteredSongs.map((song) => (
-              <SongItem
-                key={song.id}
-                title={song.title}
-                artist={song.artist}
-                image={song.image}
-              />
-            ))}
+        contentContainerStyle={{ paddingBottom: 180 }}
+        ListHeaderComponent={
+          <View className="px-5 pt-14">
+            <Header />
+            <SearchBar value="" onChangeText={() => {}} />
+            <NewReleaseBanner />
+            <View className="-mx-5 px-5">
+              <TrendingCarousel items={trendingItems} />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        }
+        renderItem={({ item: section }) => (
+          <View>
+            <SectionHeader title={section.title} />
+            <FlatList
+              data={section.items}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingLeft: 20, paddingRight: 8 }}
+              renderItem={({ item }) => <SectionCard item={item} />}
+            />
+          </View>
+        )}
+      />
 
       <NowPlayingBar />
       <BottomNavigation activeTab="home" />

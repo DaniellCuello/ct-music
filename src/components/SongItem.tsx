@@ -6,7 +6,7 @@ interface SongItemProps {
   id?: string;
   title: string;
   artist: string;
-  image: string;
+  image: string | number;
 }
 
 export function SongItem({ id = '', title, artist, image }: SongItemProps) {
@@ -19,7 +19,11 @@ export function SongItem({ id = '', title, artist, image }: SongItemProps) {
       className="flex-row items-center rounded-2xl border border-white/5 bg-[#1C1C1C] p-2"
       style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
     >
-      <Image source={{ uri: image }} className="h-14 w-14 rounded-xl" resizeMode="cover" />
+      <Image
+        source={typeof image === 'number' ? image : { uri: image }}
+        className="h-14 w-14 rounded-xl"
+        resizeMode="cover"
+      />
 
       <View className="ml-3 flex-1">
         <Text className="text-base font-semibold text-white" numberOfLines={1}>
